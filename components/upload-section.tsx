@@ -163,7 +163,7 @@ export default function UploadSection({ onFileUpload, isProcessing }: UploadSect
       <div className="grid grid-cols-2 gap-8 h-full">
         <div>
           <h3 className="text-lg font-semibold text-slate-900 mb-4">Map Preview</h3>
-          <div className="rounded-lg overflow-hidden bg-slate-50 w-full max-h-[550px] flex flex-col">
+          <div className="rounded-lg overflow-hidden bg-slate-50 w-full h-[550px]">
             <MapComponent
               data={previewData}
               selectedLayers={["Buildings", "Settlements", "Crops", "Water", "Slopes", "Other"]}
