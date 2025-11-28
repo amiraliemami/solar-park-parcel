@@ -21,10 +21,10 @@ export default function UploadSection({ onFileUpload, isProcessing }: UploadSect
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (file && file.name.endsWith(".kmz")) {
-      parseKMZPreview(file)
+    if (file && file.name.endsWith(".kml")) {
+      parseKMLPreview(file)
     } else {
-      alert("Please select a valid KMZ file")
+      alert("Please select a valid KML file")
     }
   }
 
@@ -33,27 +33,17 @@ export default function UploadSection({ onFileUpload, isProcessing }: UploadSect
     e.stopPropagation()
 
     const file = e.dataTransfer.files?.[0]
-    if (file && file.name.endsWith(".kmz")) {
-      parseKMZPreview(file)
+    if (file && file.name.endsWith(".kml")) {
+      parseKMLPreview(file)
     } else {
-      alert("Please drop a valid KMZ file")
+      alert("Please drop a valid KML file")
     }
   }
 
-  const parseKMZPreview = async (file: File) => {
+  const parseKMLPreview = async (file: File) => {
     try {
-      const arrayBuffer = await file.arrayBuffer()
-      const JSZip = (await import("jszip")).default
-      const zip = new JSZip()
-      const loaded = await zip.loadAsync(arrayBuffer)
-
-      let kmlContent = ""
-      for (const [filename, kmlFile] of Object.entries(loaded.files)) {
-        if (filename.endsWith(".kml")) {
-          kmlContent = await kmlFile.async("string")
-          break
-        }
-      }
+      // Read KML file directly as text
+      const kmlContent = await file.text()
 
       if (kmlContent) {
         const parser = new DOMParser()
@@ -164,8 +154,8 @@ export default function UploadSection({ onFileUpload, isProcessing }: UploadSect
         })
       }
     } catch (error) {
-      console.error("Error parsing KMZ file:", error)
-      alert("Error parsing KMZ file. Please ensure it is a valid KMZ file.")
+      console.error("Error parsing KML file:", error)
+      alert("Error parsing KML file. Please ensure it is a valid KML file.")
     }
   }
 
@@ -281,7 +271,7 @@ export default function UploadSection({ onFileUpload, isProcessing }: UploadSect
     <div className="w-full">
       <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
         <FileUp className="w-5 h-5 text-blue-600" />
-        Upload KMZ File
+        Upload KML File
       </h2>
 
       <div
@@ -291,20 +281,20 @@ export default function UploadSection({ onFileUpload, isProcessing }: UploadSect
         onClick={() => fileInputRef.current?.click()}
       >
         <Upload className="w-12 h-12 text-slate-400 mx-auto mb-4" />
-        <p className="text-base text-slate-600 font-medium">Drag & drop your KMZ file here</p>
+        <p className="text-base text-slate-600 font-medium">Drag & drop your KML file here</p>
         <p className="text-sm text-slate-500 mt-2">or click to browse</p>
       </div>
 
       <input
         ref={fileInputRef}
         type="file"
-        accept=".kmz"
+        accept=".kml"
         onChange={handleFileChange}
         className="hidden"
         disabled={isProcessing}
       />
 
-      <p className="text-xs text-slate-500 mt-4">✓ Supports .kmz files from Google Earth</p>
+      <p className="text-xs text-slate-500 mt-4">✓ Supports .kml files from Google Earth</p>
     </div>
   )
 }

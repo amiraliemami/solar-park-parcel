@@ -113,7 +113,7 @@ export default function MapComponent({ data, selectedLayers, center, zoom }: Map
   if (!data) {
     return (
       <div className="w-full h-full bg-slate-50 flex items-center justify-center rounded-lg">
-        <p className="text-slate-500">Upload a KMZ file to display the map</p>
+        <p className="text-slate-500">Upload a KML file to display the map</p>
       </div>
     )
   }

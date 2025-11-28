@@ -8,7 +8,7 @@ interface LayerSelectorProps {
   layers: string[]
   selectedLayers: string[]
   onLayerChange: (layer: string) => void
-  kmzData: any
+  kmlData: any
   mapCenter: [number, number]
   mapZoom: number
   clusters: any[]
@@ -26,7 +26,7 @@ export default function LayerSelector({
   layers,
   selectedLayers,
   onLayerChange,
-  kmzData,
+  kmlData,
   mapCenter,
   mapZoom,
   clusters,
@@ -123,7 +123,7 @@ export default function LayerSelector({
           <h3 className="text-lg font-semibold text-slate-900 mb-4">Layer Preview</h3>
           <div className="h-[500px]">
             <MapContainer
-              data={kmzData}
+              data={kmlData}
               selectedLayers={selectedLayers}
               center={mapCenter}
               zoom={mapZoom}
