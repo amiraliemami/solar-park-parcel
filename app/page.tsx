@@ -144,7 +144,7 @@ export default function Home() {
                 <div className="lg:col-span-1">
                   <ClusteringSection data={kmzData} onClusteringComplete={handleClusteringComplete} />
                 </div>
-                <div className="lg:col-span-2">
+                <div className="lg:col-span-2 h-[500px]">
                   <MapContainer
                     data={kmzData}
                     selectedLayers={selectedLayers}

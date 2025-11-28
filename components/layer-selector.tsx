@@ -121,13 +121,15 @@ export default function LayerSelector({
       {mapReady && (
         <div className="w-full">
           <h3 className="text-lg font-semibold text-slate-900 mb-4">Layer Preview</h3>
-          <MapContainer
-            data={kmzData}
-            selectedLayers={selectedLayers}
-            center={mapCenter}
-            zoom={mapZoom}
-            clusters={clusters}
-          />
+          <div className="h-[500px]">
+            <MapContainer
+              data={kmzData}
+              selectedLayers={selectedLayers}
+              center={mapCenter}
+              zoom={mapZoom}
+              clusters={clusters}
+            />
+          </div>
         </div>
       )}
     </div>
