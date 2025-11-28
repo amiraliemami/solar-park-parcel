@@ -16,6 +16,8 @@ export default function UploadSection({ onFileUpload, isProcessing }: UploadSect
   const [previewData, setPreviewData] = useState<any>(null)
   const [selectedIdColumn, setSelectedIdColumn] = useState<string>("")
   const [columns, setColumns] = useState<string[]>([])
+  const [mapCenter, setMapCenter] = useState<[number, number]>([20, 0])
+  const [mapZoom, setMapZoom] = useState(2)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -138,6 +140,23 @@ export default function UploadSection({ onFileUpload, isProcessing }: UploadSect
         setColumns(columnList)
         setSelectedIdColumn(columnList[0] || "name")
 
+        // Calculate center from features
+        const coords = features.flatMap((f: any) => {
+          if (f.geometry.type === "Point") return [f.geometry.coordinates]
+          if (f.geometry.type === "LineString") return f.geometry.coordinates
+          if (f.geometry.type === "Polygon") return f.geometry.coordinates[0]
+          return []
+        })
+
+        if (coords.length > 0) {
+          const lngs = coords.map((c: number[]) => c[0])
+          const lats = coords.map((c: number[]) => c[1])
+          const centerLng = (Math.min(...lngs) + Math.max(...lngs)) / 2
+          const centerLat = (Math.min(...lats) + Math.max(...lats)) / 2
+          setMapCenter([centerLat, centerLng])
+          setMapZoom(10)
+        }
+
         setPreviewData({
           type: "FeatureCollection",
           features,
@@ -167,8 +186,8 @@ export default function UploadSection({ onFileUpload, isProcessing }: UploadSect
             <MapComponent
               data={previewData}
               selectedLayers={["Buildings", "Settlements", "Crops", "Water", "Slopes", "Other"]}
-              center={[23.1815, 77.4104]}
-              zoom={10}
+              center={mapCenter}
+              zoom={mapZoom}
             />
           </div>
         </div>

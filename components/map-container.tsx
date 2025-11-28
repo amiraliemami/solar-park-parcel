@@ -18,9 +18,10 @@ interface MapProps {
 const LeafletMap = dynamic(
   () => import("react-leaflet").then((mod) => {
     const { MapContainer, TileLayer, GeoJSON, useMap } = mod
+    const L = require("leaflet")
 
-    // Helper component to handle map resize
-    function MapController() {
+    // Helper component to handle map resize and fit bounds
+    function MapController({ geoJsonData }: { geoJsonData: FeatureCollection | null }) {
       const map = useMap()
       
       useEffect(() => {
@@ -45,6 +46,20 @@ const LeafletMap = dynamic(
         }
       }, [map])
 
+      // Fit bounds when geoJsonData changes
+      useEffect(() => {
+        if (!map || !geoJsonData || geoJsonData.features.length === 0) return
+        
+        const geoJsonLayer = L.geoJSON(geoJsonData)
+        const bounds = geoJsonLayer.getBounds()
+        
+        if (bounds.isValid()) {
+          setTimeout(() => {
+            map.fitBounds(bounds, { padding: [20, 20] })
+          }, 200)
+        }
+      }, [map, geoJsonData])
+
       return null
     }
 
@@ -61,7 +76,7 @@ const LeafletMap = dynamic(
           style={{ width: "100%", height: "100%" }} 
           scrollWheelZoom={true}
         >
-          <MapController />
+          <MapController geoJsonData={geoJsonData} />
           <TileLayer
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -86,16 +101,14 @@ export default function MapComponent({ data, selectedLayers, center, zoom }: Map
 
   useEffect(() => {
     if (data?.features) {
-      const filtered: FeatureCollection = {
+      // Show all features without filtering by layer
+      const geoJson: FeatureCollection = {
         type: "FeatureCollection",
-        features: data.features.filter((f: any) => {
-          const layer = f.properties?.layer || "Other"
-          return selectedLayers.includes(layer)
-        }),
+        features: data.features,
       }
-      setGeoJsonData(filtered)
+      setGeoJsonData(geoJson)
     }
-  }, [data, selectedLayers])
+  }, [data])
 
   if (!data) {
     return (
