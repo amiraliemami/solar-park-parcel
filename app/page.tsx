@@ -16,7 +16,7 @@ export default function Home() {
   const [selectedLayers, setSelectedLayers] = useState<string[]>(AVAILABLE_LAYERS)
   const [isProcessing, setIsProcessing] = useState(false)
   const [mapCenter, setMapCenter] = useState<[number, number]>([20, 0])
-  const [mapZoom, setMapZoom] = useState(2)
+  const [mapZoom, setMapZoom] = useState(5)
   const [clusters, setClusters] = useState<any[]>([])
 
   const handleFileUpload = async (file: File, data: any, idColumn: string) => {
